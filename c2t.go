@@ -8,7 +8,7 @@ import (
 	"github.com/biogo/hts/bam"
 )
 
-
+// Opens a bam file and prints the name of each entry to standard output.
 func main() {
 	help := flag.Bool("help", false, "Print this usage message.")
 	flag.Parse()
@@ -35,5 +35,16 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
 		os.Exit(1)
 	}
+
+	it, err := bam.NewIterator(bamReader, nil)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
+		os.Exit(1)
+	}
+	for it.Next() {
+		rec := it.Record()
+		fmt.Println(rec.Name)
+	}
+
 	bamReader.Close()
 }
